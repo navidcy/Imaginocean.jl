@@ -123,12 +123,10 @@ function get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
 
     TX, TY, _ = topology(grid)
 
-    nλ, nφ = total_length(ℓx, TX(), grid.Nx, 0), total_length(ℓy, TY(), grid.Ny, 0)
+    λ = zeros(eltype(grid), total_length(ℓx, TX(), grid.Nx, 0), total_length(ℓy, TY(), grid.Ny, 0))
+    φ = zeros(eltype(grid), total_length(ℓx, TX(), grid.Nx, 0), total_length(ℓy, TY(), grid.Ny, 0))
 
-    λ = zeros(eltype(grid), nλ, nφ)
-    φ = zeros(eltype(grid), nλ, nφ)
-
-    for j in 1:nφ, i in 1:nλ
+    for j in axes(λ, 2), i in axes(λ, 1)
         λ[i, j] = xnode(i, j, 1, grid, ℓx, ℓy, ℓz)
         φ[i, j] = ynode(i, j, 1, grid, ℓx, ℓy, ℓz)
     end
@@ -136,7 +134,7 @@ function get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
     λvertices = zeros(4, size(λ)...)
     φvertices = zeros(4, size(φ)...)
 
-    for j in 1:nφ, i in 1:nλ
+    for j in axes(λ, 2), i in axes(λ, 1)
         λvertices[:, i, j] = get_longitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
         φvertices[:, i, j] =  get_latitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
     end
@@ -168,9 +166,7 @@ function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, Ort
     yvertices = similar(λvertices)
     zvertices = similar(λvertices)
 
-    nλ, nφ = size(λ)
-
-    for j in 1:nφ, i in 1:nλ
+    for j in axes(λ, 2), i in axes(λ, 1)
         x[i, j] = lat_lon_to_x(λ[i, j], φ[i, j])
         y[i, j] = lat_lon_to_y(λ[i, j], φ[i, j])
         z[i, j] = lat_lon_to_z(λ[i, j], φ[i, j])
