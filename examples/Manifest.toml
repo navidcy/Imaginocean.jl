@@ -1547,7 +1547,7 @@ version = "1.3.0"
 deps = ["Makie", "Oceananigans"]
 git-tree-sha1 = "c4be6606c372d420a5f5ed1b54c70b4491ac6a7c"
 repo-rev = "main"
-repo-url = "https://github.com/navidcy/Visualanigans.jl.git"
+repo-url = "https://github.com/navidcy/Visualizocean.jl.git"
 uuid = "12c4ca38-4e4f-41dd-8fa8-8127a85ce97a"
 version = "0.1.0"
 

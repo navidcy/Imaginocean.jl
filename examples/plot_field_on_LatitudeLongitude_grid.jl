@@ -1,6 +1,6 @@
 using Oceananigans
 
-using Visualanigans, GLMakie, GeoMakie
+using Visualizocean, GLMakie, GeoMakie
 
 GLMakie.activate!()
 

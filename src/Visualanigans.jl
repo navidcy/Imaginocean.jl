@@ -210,4 +210,4 @@ function heatlatlon!(ax::Axis, field::Field, k=1; kwargs...)
     return ax
 end
 
-end # module Visualanigans
+end # module Visualizocean
