@@ -1,6 +1,6 @@
 # # Visualize fields on a latitude-longitude grid.
 
-# ## Install dependencies
+# ### Install dependencies
 #
 # First let's make sure we have all required packages installed.
 
@@ -8,6 +8,8 @@
 # using Pkg
 # pkg"add Oceananigans, CairoMakie, Imaginocean, GeoMakie"
 # ```
+
+# ### Construct a test-bed field
 
 # Let's plot a field that lives on a latitude-longitude grid.
 
@@ -32,6 +34,8 @@ field = YFaceField(grid)
 
 set!(field, (λ, φ, z) -> cosd(3λ)^2 * sind(3φ))
 
+# ### 2D visualization
+
 # We can visualize this field in 2D using a heatmap. Imaginocean.jl exports
 # a method for `heatmap!` that works with Oceananigans.jl fields.
 
@@ -49,7 +53,6 @@ heatmap!(ax, field; kwargs...)
 current_figure() # hide
 fig
 
-
 # We can do the same but with a `GeoAxis` provided by the GeoMakie.jl package
 # that allows us to add coastlines easy or use various projections.
 
@@ -64,6 +67,8 @@ heatmap!(ax, field; kwargs...)
 
 current_figure() # hide
 fig
+
+# ### 3D visualization on the sphere
 
 # To make a 3D visualization on the sphere we first create a 3D axis and then
 # use `heatsphere!` method from Imaginocean.jl.
