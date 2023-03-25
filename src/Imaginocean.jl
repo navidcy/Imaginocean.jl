@@ -40,7 +40,7 @@ lat_lon_to_z(longitude, latitude) = sind(latitude)
 longitude_in_same_window(λ₁, λ₂) = mod(λ₁ - λ₂ + 180, 360) + λ₂ - 180
 
 flip_location(::Center) = Face()
-flip_location(::Face) = Centser()
+flip_location(::Face) = Center()
 
 """
     get_longitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
