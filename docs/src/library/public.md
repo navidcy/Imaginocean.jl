@@ -1,12 +1,12 @@
 # Public Documentation
 
-Documentation for `Visualizocean.jl`'s public interface.
+Documentation for `Imaninocean.jl`'s public interface.
 
 See the Internals section of the manual for internal package docs covering all submodules.
 
-## Visualizocean
+## Imaninocean
 
 ```@autodocs
-Modules = [Visualizocean]
+Modules = [Imaninocean]
 Private = false
 ```

@@ -1,11 +1,11 @@
-pushfirst!(LOAD_PATH, joinpath(@__DIR__, "..")) # add Visualizocean to environment stack
+pushfirst!(LOAD_PATH, joinpath(@__DIR__, "..")) # add Imaninocean to environment stack
 
 using
   Documenter,
   Literate,
   CairoMakie,  # so that Literate.jl does not capture precompilation output or warnings
   Glob,
-  Visualizocean
+  Imaninocean
 
 #####
 ##### Generate examples
@@ -49,8 +49,8 @@ pages = [
 ]
 
 makedocs(
-   sitename = "Visualizocean.jl",
-    modules = [Visualizocean],
+   sitename = "Imaninocean.jl",
+    modules = [Imaninocean],
      format = format,
       pages = pages,
     doctest = true,
@@ -65,10 +65,8 @@ for file in vcat(glob("docs/*.jld2"), glob("docs/*.nc"))
     rm(file)
 end
 
-withenv("GITHUB_REPOSITORY" => "navidcy/Visualizocean") do
-    deploydocs(        repo = "github.com/navidcy/Visualizocean.git",
-                   versions = ["stable" => "v^", "v#.#.#", "dev" => "dev"],
-                  forcepush = true,
-                  devbranch = "main",
-               push_preview = true)
-end
+deploydocs(        repo = "github.com/navidcy/Imaninocean.jl.git",
+                versions = ["stable" => "v^", "v#.#.#", "dev" => "dev"],
+              forcepush = true,
+              devbranch = "main",
+            push_preview = true)
