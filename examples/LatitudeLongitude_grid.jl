@@ -18,6 +18,7 @@ set!(field, (λ, φ, z) -> cosd(3λ)^2 * sind(3φ))
 
 colorrange = (-1, 1)
 colormap = :balance
+nothing # hide
 
 # To plot on the sphere we first create a figure with a 3D axis.
 
