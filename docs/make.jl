@@ -15,7 +15,7 @@ const EXAMPLES_DIR = joinpath(@__DIR__, "..", "examples")
 const OUTPUT_DIR   = joinpath(@__DIR__, "src/literated")
 
 to_be_literated = [
-    "LatitudeLongitude_grid.jl"
+    "LatitudeLongitude_grid.jl",
 ]
 
 for file in to_be_literated
@@ -34,7 +34,7 @@ example_pages = [
 format = Documenter.HTML(
   collapselevel = 2,
      prettyurls = get(ENV, "CI", nothing) == "true",
-      canonical = "https://clima.github.io/ClimaOceanDocumentation/dev/",
+      canonical = "https://navidcy.github.io/Imaginocean.jl/dev/",
 )
 
 pages = [
