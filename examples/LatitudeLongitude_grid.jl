@@ -72,7 +72,7 @@ fig = Figure()
 ax = Axis3(fig[1, 1], aspect=(1, 1, 1), limits=((-1, 1), (-1, 1), (-1, 1)))
 
 heatsphere!(ax, field; kwargs...)
-hidedecorations!(ax) # hides the axis labels
+hidedecorations!(ax) # hides the axes labels
 
 current_figure() # hide
 fig
