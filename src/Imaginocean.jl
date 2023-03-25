@@ -1,20 +1,30 @@
 module Imaginocean
 
-export heatsphere!, heatlatlon!
+export heatsphere!, heatmap!
 
 using Makie
 using Oceananigans
 using Oceananigans.Grids: xnode, ynode, total_length, topology
 
-"""
-    lat_lon_to_cartesian(longitude, latitude)
+import Makie: heatmap!
 
-Convert `(longitude, latitude)` coordinates (in degrees) to
-cartesian coordinates `(x, y, z)` on the unit sphere.
 """
-lat_lon_to_cartesian(longitude, latitude) = (lat_lon_to_x(longitude, latitude),
-                                             lat_lon_to_y(longitude, latitude),
-                                             lat_lon_to_z(longitude, latitude))
+    lat_lon_to_cartesian(longitude, latitude; radius=1)
+
+Convert ``(λ, φ) =(```longitude```, ```latitude```)`` coordinates (in degrees) to
+cartesian coordinates ``(x, y, z)`` on a sphere with `radius`, ``R``, i.e.,
+
+```math
+\\begin{aligned}
+x &= R \\cos(λ) \\cos(φ), \\\\
+y &= R \\sin(λ) \\cos(φ), \\\\
+z &= R \\sin(φ).
+\\end{aligned}
+```
+"""
+lat_lon_to_cartesian(longitude, latitude; radius=1) = (radius * lat_lon_to_x(longitude, latitude),
+                                                       radius * lat_lon_to_y(longitude, latitude),
+                                                       radius * lat_lon_to_z(longitude, latitude))
 
 """
     lat_lon_to_x(longitude, latitude)
@@ -175,7 +185,20 @@ function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, Ort
     return (x, y, z), (xvertices, yvertices, zvertices)
 end
 
-function heatsphere!(ax::Axis3, field::Field, k=1; kwargs...)
+"""
+    heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
+
+A heatmap of an Oceananigans.jl `field` on the sphere.
+
+Arguments
+=========
+* `axis :: Makie.Axis3`: a 3D axis
+* `field :: Oceananigans.Field`: an Oceananigans.jl field with non-flat horizontal dimensions
+* `k_index :: Int`: The integer corresponding to the vertical level of the `field` to visualize; default: 1.
+
+Accepts all keyword arguments for `Makie.mesh!` method.
+"""
+function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
     LX, LY, LZ = location(field)
     grid = field.grid
 
@@ -184,14 +207,14 @@ function heatsphere!(ax::Axis3, field::Field, k=1; kwargs...)
     quad_points3 = vcat([Point3.(xvertices[:, i, j], yvertices[:, i, j], zvertices[:, i, j]) for i in axes(xvertices, 2), j in axes(xvertices, 3)]...)
     quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points3)÷4]...)
 
-    colors_per_point = vcat(fill.(vec(interior(field, :, :, k)), 4)...)
+    colors_per_point = vcat(fill.(vec(interior(field, :, :, k_index)), 4)...)
 
-    mesh!(ax, quad_points3, quad_faces; color = colors_per_point, shading = false, kwargs...)
+    mesh!(axis, quad_points3, quad_faces; color = colors_per_point, shading = false, kwargs...)
 
-    return ax
+    return axis
 end
 
-function heatlatlon!(ax::Axis, field::Field, k=1; kwargs...)
+function heatmap!(ax::Axis, field::Field, k=1; kwargs...)
     LX, LY, LZ = location(field)
     grid = field.grid
 
