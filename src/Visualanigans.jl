@@ -5,14 +5,12 @@ export heatsphere!, heatlatlon!
 using Makie
 using Oceananigans
 using Oceananigans.Grids: xnode, ynode, total_length
-using Oceananigans.Utils: get_lat_lon_nodes_and_vertices,
-                          get_cartesian_nodes_and_vertices
 
 """
     lat_lon_to_cartesian(longitude, latitude)
 
-Convert `(longitude, latitude)` coordinates (in degrees) to cartesian coordinates `(x, y, z)`
-on the unit sphere.
+Convert `(longitude, latitude)` coordinates (in degrees) to
+cartesian coordinates `(x, y, z)` on the unit sphere.
 """
 lat_lon_to_cartesian(longitude, latitude) = (lat_lon_to_x(longitude, latitude),
                                              lat_lon_to_y(longitude, latitude),
@@ -38,7 +36,7 @@ lat_lon_to_y(longitude, latitude) = sind(longitude) * cosd(latitude)
 Convert `(longitude, latitude)` coordinates (in degrees) to cartesian `z` on the unit sphere.
 """
 lat_lon_to_z(longitude, latitude) = sind(latitude)
-
+    
 longitude_in_same_window(λ₁, λ₂) = mod(λ₁ - λ₂ + 180, 360) + λ₂ - 180
 
 flip_location(::Center) = Face()
