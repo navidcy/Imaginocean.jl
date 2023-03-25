@@ -40,7 +40,7 @@ lat_lon_to_z(longitude, latitude) = sind(latitude)
 longitude_in_same_window(λ₁, λ₂) = mod(λ₁ - λ₂ + 180, 360) + λ₂ - 180
 
 flip_location(::Center) = Face()
-flip_location(::Face) = Center()
+flip_location(::Face) = Centser()
 
 """
     get_longitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
@@ -184,7 +184,7 @@ function heatsphere!(ax::Axis3, field::Field, k=1; kwargs...)
     quad_points3 = vcat([Point3.(xvertices[:, i, j], yvertices[:, i, j], zvertices[:, i, j]) for i in axes(xvertices, 2), j in axes(xvertices, 3)]...)
     quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points3)÷4]...)
 
-    colors_per_point = vcat(c.(vec(interior(field, :, :, k)), 4)...)
+    colors_per_point = vcat(fill.(vec(interior(field, :, :, k)), 4)...)
 
     mesh!(ax, quad_points3, quad_faces; color = colors_per_point, shading = false, kwargs...)
 
