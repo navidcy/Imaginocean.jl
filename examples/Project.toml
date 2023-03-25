@@ -1,5 +1,0 @@
-[deps]
-GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
-GeoMakie = "db073c08-6b98-4ee5-b6a4-5efafb3259c6"
-Oceananigans = "9e8cae18-63c1-5223-a75c-80ca9d6e9a09"
-Visualizocean = "12c4ca38-4e4f-41dd-8fa8-8127a85ce97a"

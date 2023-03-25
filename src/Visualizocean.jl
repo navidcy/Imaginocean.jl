@@ -1,4 +1,4 @@
-module Visualanigans
+module Visualizocean
 
 export heatsphere!, heatlatlon!
 
@@ -111,7 +111,7 @@ See [`get_longitude_vertices`](@ref) and [`get_latitude_vertices`](@ref).
 """
 function get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
 
-    TX, TY, TZ = topology(grid)
+    TX, TY, _ = topology(grid)
 
     nλ, nφ = total_length(ℓx, TX(), grid.Nx, 0), total_length(ℓy, TY(), grid.Ny, 0)
 
@@ -133,7 +133,7 @@ function get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
 
     λ = mod.(λ .+ 180, 360) .- 180
     λvertices = longitude_in_same_window.(λvertices, reshape(λ, (1, size(λ)...)))
-    
+
     return (λ, φ), (λvertices, φvertices)
 end
 
@@ -183,7 +183,7 @@ function heatsphere!(ax::Axis3, field::Field, k=1; kwargs...)
 
     quad_points3 = vcat([Point3.(xvertices[:, i, j], yvertices[:, i, j], zvertices[:, i, j]) for i in axes(xvertices, 2), j in axes(xvertices, 3)]...)
     quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points3)÷4]...)
-    
+
     colors_per_point = vcat(fill.(vec(interior(field, :, :, k)), 4)...)
     
     mesh!(ax, quad_points3, quad_faces; color = colors_per_point, shading = false, kwargs...)
@@ -197,7 +197,7 @@ function heatlatlon!(ax::Axis, field::Field, k=1; kwargs...)
 
     _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
 
-    quad_points = vcat([Point2.(λvertices[:, i, j], φvertices[:, i, j]) for i in 1:size(λvertices, 2), j in 1:size(λvertices, 3)]...)
+    quad_points = vcat([Point2.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
     quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points)÷4]...)
 
     colors_per_point = vcat(fill.(vec(interior(field, :, :, k)), 4)...)
