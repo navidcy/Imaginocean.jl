@@ -1,10 +1,10 @@
 # Private types and functions
 
-Documentation for `Imaninocean.jl`'s internal interface.
+Documentation for `Imaginocean.jl`'s internal interface.
 
-## Visualizocean
+## Imaginocean
 
 ```@autodocs
-Modules = [Imaninocean]
+Modules = [Imaginocean]
 Public = false
 ```

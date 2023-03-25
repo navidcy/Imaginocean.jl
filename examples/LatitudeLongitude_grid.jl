@@ -1,7 +1,7 @@
 # Let's plot a field that lives on a latitude-longitude grid.
 
 using Oceananigans
-using Imaninocean
+using Imaginocean
 using CairoMakie, GeoMakie
 
 Nx, Ny, Nz = 80, 60, 2

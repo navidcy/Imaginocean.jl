@@ -1,11 +1,11 @@
-pushfirst!(LOAD_PATH, joinpath(@__DIR__, "..")) # add Imaninocean to environment stack
+pushfirst!(LOAD_PATH, joinpath(@__DIR__, "..")) # add Imaginocean to environment stack
 
 using
   Documenter,
   Literate,
   CairoMakie,  # so that Literate.jl does not capture precompilation output or warnings
   Glob,
-  Imaninocean
+  Imaginocean
 
 #####
 ##### Generate examples
@@ -49,8 +49,8 @@ pages = [
 ]
 
 makedocs(
-   sitename = "Imaninocean.jl",
-    modules = [Imaninocean],
+   sitename = "Imaginocean.jl",
+    modules = [Imaginocean],
      format = format,
       pages = pages,
     doctest = true,
@@ -65,7 +65,7 @@ for file in vcat(glob("docs/*.jld2"), glob("docs/*.nc"))
     rm(file)
 end
 
-deploydocs(        repo = "github.com/navidcy/Imaninocean.jl.git",
+deploydocs(        repo = "github.com/navidcy/Imaginocean.jl.git",
                 versions = ["stable" => "v^", "v#.#.#", "dev" => "dev"],
               forcepush = true,
               devbranch = "main",

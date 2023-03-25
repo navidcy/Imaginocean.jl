@@ -1,12 +1,12 @@
 # Public Documentation
 
-Documentation for `Imaninocean.jl`'s public interface.
+Documentation for `Imaginocean.jl`'s public interface.
 
 See the Internals section of the manual for internal package docs covering all submodules.
 
-## Imaninocean
+## Imaginocean
 
 ```@autodocs
-Modules = [Imaninocean]
+Modules = [Imaginocean]
 Private = false
 ```
