@@ -4,7 +4,7 @@ export heatsphere!, heatlatlon!
 
 using Makie
 using Oceananigans
-using Oceananigans.Grids: xnode, ynode, total_length
+using Oceananigans.Grids: xnode, ynode, total_length, topology
 
 """
     lat_lon_to_cartesian(longitude, latitude)
