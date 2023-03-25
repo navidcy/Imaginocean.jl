@@ -1,6 +1,6 @@
 name = "Imaginocean"
 uuid = "12c4ca38-4e4f-41dd-8fa8-8127a85ce97a"
-authors = ["Navid C. Constantinou <navidcy@users.noreply.github.com>"]
+authors = ["Climate Modeling Alliance and contributors"]
 version = "0.1.0"
 
 [deps]
