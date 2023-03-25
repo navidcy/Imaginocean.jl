@@ -1,1 +1,1 @@
-# VisualizeOceananigans.jl
+# Visualizocean.jl
