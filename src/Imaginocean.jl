@@ -192,8 +192,8 @@ A heatmap of an Oceananigans.jl `field` on the sphere.
 
 Arguments
 =========
-* `axis :: Makie.Axis3`: a 3D axis
-* `field :: Oceananigans.Field`: an Oceananigans.jl field with non-flat horizontal dimensions
+* `axis :: Makie.Axis3`: a 3D axis.
+* `field :: Oceananigans.Field`: an Oceananigans.jl field with non-flat horizontal dimensions.
 * `k_index :: Int`: The integer corresponding to the vertical level of the `field` to visualize; default: 1.
 
 Accepts all keyword arguments for `Makie.mesh!` method.
