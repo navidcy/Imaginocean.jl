@@ -7,7 +7,7 @@ using
   Glob,
   Imaginocean
 
-# CairoMakie.activate!(type = "svg")
+CairoMakie.activate!(type = "svg")
 
 #####
 ##### Generate examples
