@@ -2,7 +2,7 @@
 
 julia_version = "1.8.5"
 manifest_format = "2.0"
-project_hash = "970b7b40c76d7240b1492bd6a20b01df1b705318"
+project_hash = "d665458398fb8237c16b89761305b6e7a5b520a9"
 
 [[deps.AMGX]]
 deps = ["AMGX_jll", "CEnum", "CUDA", "JSON", "Libdl", "SparseArrays"]
@@ -894,9 +894,7 @@ version = "0.5.4"
 
 [[deps.Oceananigans]]
 deps = ["AMGX", "Adapt", "AlgebraicMultigrid", "CUDA", "CUDAKernels", "Crayons", "CubedSphere", "Dates", "DocStringExtensions", "FFTW", "Glob", "IncompleteLU", "InteractiveUtils", "IterativeSolvers", "JLD2", "KernelAbstractions", "LinearAlgebra", "Logging", "MPI", "NCDatasets", "OffsetArrays", "OrderedCollections", "PencilArrays", "PencilFFTs", "Pkg", "Printf", "Random", "Rotations", "SeawaterPolynomials", "SparseArrays", "Statistics", "StructArrays", "Tullio"]
-git-tree-sha1 = "923a4c8b5767b179c38415787b74d7f41420173e"
-repo-rev = "f3113c4"
-repo-url = "https://github.com/CliMA/Oceananigans.jl.git"
+git-tree-sha1 = "967e1c47abfb4457e57182a2b645432ab4c8e01c"
 uuid = "9e8cae18-63c1-5223-a75c-80ca9d6e9a09"
 version = "0.80.0"
 
