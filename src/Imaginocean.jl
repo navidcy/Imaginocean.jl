@@ -1,12 +1,10 @@
 module Imaginocean
 
-export heatsphere!, heatmap!
+export heatsphere!
 
 using Makie
 using Oceananigans
 using Oceananigans.Grids: xnode, ynode, total_length, topology
-
-import Makie: heatmap!
 
 """
     lat_lon_to_cartesian(longitude, latitude; radius=1)
@@ -56,7 +54,7 @@ flip_location(::Face) = Center()
     get_longitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
 
 Return the longitudes that correspond to the four vertices of cell `i, j, k` at
-location `(ℓx, ℓy, ℓz)`. The first vertice is the cell's Southern-Western one
+location `(ℓx, ℓy, ℓz)`. The first vertex is the cell's Southern-Western one
 and the rest follow in counter-clockwise order.
 """
 function get_longitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
@@ -85,7 +83,7 @@ end
     get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
 
 Return the latitudes that correspond to the four vertices of cell `i, j, k` at
-location `(ℓx, ℓy, ℓz)`. The first vertice is the cell's Southern-Western one
+location `(ℓx, ℓy, ℓz)`. The first vertex is the cell's Southern-Western one
 and the rest follow in counter-clockwise order.
 """
 function get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
@@ -210,23 +208,25 @@ function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
     return axis
 end
 
-function heatmap!(ax::Axis, field::Field, k=1; kwargs...)
+"""
+    function Makie.convert_arguments(P::SurfaceLike, field::Field, depth_level::Int64)
+Convert an Oceananigans.jl `Field` at `depth_level` to arguments that can be plotted as a
+`SurfaceLike` type in Makie.jl.
+"""
+function Makie.convert_arguments(P::SurfaceLike, field::Field, depth_level::Int64)
+
     LX, LY, LZ = location(field)
     grid = field.grid
 
     _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
 
-    quad_points = vcat([Point2.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
-    quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points)÷4]...)
+    quad_points = vcat([Point2f.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
 
-    colors_per_point = vcat(fill.(vec(interior(field, :, :, k)), 4)...)
+    lons = unique([quad_points[i][1] for i ∈ eachindex(quad_points)])
+    lats = unique([quad_points[i][2] for i ∈ eachindex(quad_points)])
+    field_var = interior(field, :, :, depth_level)
+    return convert_arguments(P, lons, lats, field_var)
 
-    mesh!(ax, quad_points, quad_faces; color = colors_per_point, shading = false, kwargs...)
-
-    xlims!(ax, (-180, 180))
-    ylims!(ax, (-90, 90))
-
-    return ax
 end
 
 end # module Imaginocean

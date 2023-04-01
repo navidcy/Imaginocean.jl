@@ -27,7 +27,7 @@ grid = LatitudeLongitudeGrid(size = (Nx, Ny, Nz),
 
 # Let's create a field. We choose here a field that lives on the ``y``-faces of the cells
 # but any field would do.
-# 
+#
 # We set the field value to ``\cos(3λ)^2 \sin(3φ)`` and see how that looks.
 
 field = YFaceField(grid)
@@ -46,9 +46,10 @@ kwargs = (colorrange = (-1, 1), colormap = :balance)
 fig = Figure()
 ax = Axis(fig[1, 1],
           xlabel="longitude [ᵒ]",
-          ylabel="latitude [ᵒ]")
+          ylabel="latitude [ᵒ]",
+          limits = ((-180, 180), (-90, 90)))
 
-heatmap!(ax, field; kwargs...)
+heatmap!(ax, field, 1; kwargs...)
 
 current_figure() # hide
 fig
@@ -63,7 +64,7 @@ ax = GeoAxis(fig[1, 1],
              coastlines = true,
              lonlims = automatic)
 
-heatmap!(ax, field; kwargs...)
+heatmap!(ax, field, 1; kwargs...)
 
 current_figure() # hide
 fig
