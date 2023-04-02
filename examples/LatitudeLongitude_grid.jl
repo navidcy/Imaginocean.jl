@@ -17,27 +17,26 @@ using Oceananigans
 
 # First create a latitude-longitude grid
 
-Nx, Ny, Nz = 80, 60, 2
+Nx, Ny, Nz = 180, 120, 2
 
 grid = LatitudeLongitudeGrid(size = (Nx, Ny, Nz),
                              latitude = (-60, 60),
-                             longitude = (-150, 20),
+                             longitude = (-155, 25),
                              z = (-1, 0),
-                             topology = (Bounded, Bounded, Bounded))
-
+                             topology = (Periodic, Bounded, Bounded))
 # Let's create a field. We choose here a field that lives on the ``y``-faces of the cells
 # but any field would do.
 #
-# We set the field value to ``\cos(3λ)^2 \sin(3φ)`` and see how that looks.
+# We set the field value to ``\sin(3λ)^2 \sin(3φ)`` and see how that looks.
 
-field = YFaceField(grid)
+field = Field{Face, Face, Center}(grid)
 
-set!(field, (λ, φ, z) -> cosd(3λ)^2 * sind(3φ))
+set!(field, (λ, φ, z) -> sind(3λ)^2 * sind(3φ))
 
 # ### 2D visualization
 
-# We can visualize this field in 2D using a heatmap. Imaginocean.jl exports
-# a method for `heatmap!` that works with Oceananigans.jl fields.
+# We can visualize this field in 2D using a heatmap. Imaginocean.jl adds a method
+# to `heatmap!` so that it works with Oceananigans.jl fields.
 
 using CairoMakie, Imaginocean
 
@@ -45,8 +44,8 @@ kwargs = (colorrange = (-1, 1), colormap = :balance)
 
 fig = Figure()
 ax = Axis(fig[1, 1],
-          xlabel="longitude [ᵒ]",
-          ylabel="latitude [ᵒ]",
+          xlabel = "longitude [ᵒ]",
+          ylabel = "latitude [ᵒ]",
           limits = ((-180, 180), (-90, 90)))
 
 heatmap!(ax, field, 1; kwargs...)
@@ -75,7 +74,9 @@ fig
 # use `heatsphere!` method from Imaginocean.jl.
 
 fig = Figure()
-ax = Axis3(fig[1, 1], aspect=(1, 1, 1), limits=((-1, 1), (-1, 1), (-1, 1)))
+ax = Axis3(fig[1, 1],
+           aspect = (1, 1, 1),
+           limits = ((-1, 1), (-1, 1), (-1, 1)))
 
 heatsphere!(ax, field; kwargs...)
 hidedecorations!(ax) # hides the axes labels
