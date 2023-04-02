@@ -65,6 +65,7 @@ julia> longitude_domain(-50)
 
 julia> longitude_domain(-50; lower_limit=0)
 310
+```
 """
 longitude_domain(longitude; lower_limit = -180) = mod.(longitude .+ lower_limit + 360, 360) .+ lower_limit
 
@@ -130,7 +131,6 @@ function get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, Ortho
 end
 
 longitude_in_same_window(λ₁, λ₂) = mod(λ₁ - λ₂ + 180, 360) + λ₂ - 180
-
 
 """
     get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓzs; lower_limit=-180)
@@ -209,13 +209,14 @@ end
 """
     heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
 
-A heatmap of an Oceananigans.jl `field` on the sphere.
+A heatmap of an Oceananigans.jl `field` on the sphere at vertical
+index `k_index`.
 
 Arguments
 =========
 * `axis :: Makie.Axis3`: a 3D axis.
 * `field :: Oceananigans.Field`: an Oceananigans.jl field with non-flat horizontal dimensions.
-* `k_index :: Int`: The integer corresponding to the vertical level of the `field` to visualize; default: 1.
+* `k_index :: Int`: The integer corresponding to the vertical index of the `field` to visualize; default: 1.
 
 Accepts all keyword arguments for `Makie.mesh!` method.
 """
@@ -228,26 +229,27 @@ function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
     quad_points3 = vcat([Point3.(xvertices[:, i, j], yvertices[:, i, j], zvertices[:, i, j]) for i in axes(xvertices, 2), j in axes(xvertices, 3)]...)
     quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points3)÷4]...)
 
-    colors_per_point = vcat(fill.(vec(interior(field, :, :, k_index)), 4)...)
+    field_2D = interior(field, :, :, k_index)
 
-    mesh!(axis, quad_points3, quad_faces; color = colors_per_point, shading = false, kwargs...)
+    colors_per_point = vcat(fill.(vec(field_2D), 4)...)
+
+    mesh!(axis, quad_points3, quad_faces; color = colors_per_point, shading = false, interpolate=false, kwargs...)
 
     return axis
 end
 
 """
-    Makie.convert_arguments(P::SurfaceLike, field::Field, z_index::Int)
+    Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)
 
-Convert an `Oceananigans.Field` at `depth_level` to arguments that can be plotted as a
-`SurfaceLike` type in Makie.jl.
+Convert an `Oceananigans.Field` with non-flat horizontal dimensions at vertical
+index `k_index` to arguments that can be plotted as a `SurfaceLike` type in Makie.jl.
 """
-function Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)
-
+function Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int; kwargs...)
     LX, LY, LZ = location(field)
     grid = field.grid
 
     _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
-    @show λvertices
+
     quad_points = vcat([Point2f.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
 
     longitudes = unique([quad_points[i][1] for i ∈ eachindex(quad_points)])
