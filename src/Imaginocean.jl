@@ -45,7 +45,28 @@ Convert `(longitude, latitude)` coordinates (in degrees) to cartesian `z` on the
 """
 lat_lon_to_z(longitude, latitude) = sind(latitude)
 
-longitude_in_same_window(λ₁, λ₂) = mod(λ₁ - λ₂ + 180, 360) + λ₂ - 180
+"""
+    longitude_domain(longitude; lower_limit = -180)
+
+Bring `longitude` to domain `[lower_limit, lower_limit+360]` (in degrees).
+By default, `lower_limit = -180` implying longitude domain ``[-180, 180]``.
+
+Examples
+========
+
+```jldoctest
+julia> using Imaginocean: longitude_domain
+
+julia> longitude_domain(400)
+40
+
+julia> longitude_domain(-50)
+-50
+
+julia> longitude_domain(-50; lower_limit=0)
+310
+"""
+longitude_domain(longitude; lower_limit = -180) = mod.(longitude .+ lower_limit + 360, 360) .+ lower_limit
 
 flip_location(::Center) = Face()
 flip_location(::Face) = Center()
@@ -108,8 +129,11 @@ function get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, Ortho
     return [φ₁; φ₂; φ₃; φ₄]
 end
 
+longitude_in_same_window(λ₁, λ₂) = mod(λ₁ - λ₂ + 180, 360) + λ₂ - 180
+
+
 """
-    get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
+    get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓzs; lower_limit=-180)
 
 Return the latitude-longitude coordinates of the horizontal nodes of the
 `grid` at locations `ℓx`, `ℓy`, and `ℓz` and also the coordinates of the four
@@ -136,9 +160,12 @@ function get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
         λvertices[:, i, j] = get_longitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
         φvertices[:, i, j] =  get_latitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
     end
+    
+    # ensure λ ∈ [-180, 180]
+    @. λ = longitude_domain(λ)
 
-    λ = mod.(λ .+ 180, 360) .- 180
-    λvertices = longitude_in_same_window.(λvertices, reshape(λ, (1, size(λ)...)))
+    # ensure all vertices have longitudes in the same domain as λ
+    λvertices = longitude_domain.(λvertices .- reshape(λ, (1, size(λ)...))) .+ reshape(λ, (1, size(λ)...))
 
     return (λ, φ), (λvertices, φvertices)
 end
@@ -209,24 +236,26 @@ function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
 end
 
 """
-    function Makie.convert_arguments(P::SurfaceLike, field::Field, depth_level::Int64)
-Convert an Oceananigans.jl `Field` at `depth_level` to arguments that can be plotted as a
+    Makie.convert_arguments(P::SurfaceLike, field::Field, z_index::Int)
+
+Convert an `Oceananigans.Field` at `depth_level` to arguments that can be plotted as a
 `SurfaceLike` type in Makie.jl.
 """
-function Makie.convert_arguments(P::SurfaceLike, field::Field, depth_level::Int64)
+function Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)
 
     LX, LY, LZ = location(field)
     grid = field.grid
 
     _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
-
+    @show λvertices
     quad_points = vcat([Point2f.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
 
-    lons = unique([quad_points[i][1] for i ∈ eachindex(quad_points)])
-    lats = unique([quad_points[i][2] for i ∈ eachindex(quad_points)])
-    field_var = interior(field, :, :, depth_level)
-    return convert_arguments(P, lons, lats, field_var)
+    longitudes = unique([quad_points[i][1] for i ∈ eachindex(quad_points)])
+    latitudes  = unique([quad_points[i][2] for i ∈ eachindex(quad_points)])
 
+    field_2D = interior(field, :, :, k_index)
+
+    return convert_arguments(P, longitudes, latitudes, field_2D)
 end
 
 end # module Imaginocean
