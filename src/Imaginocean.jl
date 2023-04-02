@@ -93,12 +93,12 @@ function get_longitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, Orth
         j₀ = j-1
     end
 
-    λ₁ = xnode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    λ₂ = xnode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    λ₃ = xnode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    λ₄ = xnode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₁ = xnode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₂ = xnode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₃ = xnode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₄ = xnode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
 
-    return [λ₁; λ₂; λ₃; λ₄]
+    return [λ_vertex₁; λ_vertex₂; λ_vertex₃; λ_vertex₄]
 end
 
 """
@@ -122,12 +122,12 @@ function get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, Ortho
         j₀ = j-1
     end
 
-    φ₁ = ynode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    φ₂ = ynode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    φ₃ = ynode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    φ₄ = ynode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₁ = ynode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₂ = ynode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₃ = ynode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₄ = ynode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
 
-    return [φ₁; φ₂; φ₃; φ₄]
+    return [φ_vertex₁; φ_vertex₂; φ_vertex₃; φ_vertex₄]
 end
 
 longitude_in_same_window(λ₁, λ₂) = mod(λ₁ - λ₂ + 180, 360) + λ₂ - 180
@@ -209,8 +209,7 @@ end
 """
     heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
 
-A heatmap of an Oceananigans.jl `field` on the sphere at vertical
-index `k_index`.
+A heatmap of an Oceananigans.jl `Field` on the sphere at vertical index `k_index`.
 
 Arguments
 =========
@@ -241,7 +240,7 @@ end
 """
     Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)
 
-Convert an `Oceananigans.Field` with non-flat horizontal dimensions at vertical
+Convert an Oceananigans.jl `Field` with non-flat horizontal dimensions at vertical
 index `k_index` to arguments that can be plotted as a `SurfaceLike` type in Makie.jl.
 """
 function Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int; kwargs...)
