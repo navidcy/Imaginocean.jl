@@ -15,7 +15,7 @@
 
 using Oceananigans
 
-# First create a latitude-longitude grid
+# First create a latitude-longitude grid.
 
 Nx, Ny, Nz = 180, 120, 2
 
