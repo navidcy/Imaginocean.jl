@@ -256,7 +256,7 @@ function heatlatlon!(ax::Axis, field, k_index::Int=1; kwargs...)
     quad_points = vcat([Point2.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
     quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points)÷4]...)
 
-    colors_per_point = vcat(fill.(vec(interior(field, :, :, k)), 4)...)
+    colors_per_point = vcat(fill.(vec(interior(field, :, :, k_index)), 4)...)
 
     mesh!(ax, quad_points, quad_faces; color = colors_per_point, shading = false, kwargs...)
 
