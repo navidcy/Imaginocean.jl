@@ -1,6 +1,6 @@
 module Imaginocean
 
-export heatsphere!
+export heatsphere!, heatlatlon!
 
 using Makie
 using Oceananigans
@@ -9,7 +9,7 @@ using Oceananigans.Grids: λnode, φnode, total_length, topology
 """
     lat_lon_to_cartesian(longitude, latitude; radius=1)
 
-Convert ``(λ, φ) =(```longitude```, ```latitude```)`` coordinates (in degrees) to
+Convert ``(λ, φ) = (```longitude```, ```latitude```)`` coordinates (in degrees) to
 cartesian coordinates ``(x, y, z)`` on a sphere with `radius`, ``R``, i.e.,
 
 ```math
@@ -237,6 +237,46 @@ function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
 
     return axis
 end
+
+heatsphere!(axis::Axis3, field::CubedSphereField, k_index=1; kwargs...) =
+    apply_regionally!(heatsphere!, axis, field, k_index; kwargs...)
+
+
+#####
+##### Heat maps on a latitude-longitude grid from (potentially) quasi-unstructured data
+##### like that associated with CubedSphereField
+#####
+
+function heatlatlon!(ax::Axis, field, k_index::Int=1; kwargs...)
+    LX, LY, LZ = location(field)
+
+    grid = field.grid
+    _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
+
+    quad_points = vcat([Point2.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
+    quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points)÷4]...)
+
+    colors_per_point = vcat(fill.(vec(interior(field, :, :, k_index)), 4)...)
+
+    mesh!(ax, quad_points, quad_faces; color = colors_per_point, shading = false, kwargs...)
+
+    return ax
+end
+
+function heatlatlon!(ax::Axis, field::CubedSphereField, k_index::Int=1; kwargs...)
+    apply_regionally!(heatlatlon!, ax, field, k_index; kwargs...)
+
+    xlims!(ax, (-180, 180))
+    ylims!(ax, (-90, 90))
+
+    return ax
+end
+
+heatlatlon!(ax::Axis, field::Observable{<:CubedSphereField}, k_index::Int=1; kwargs...) =
+    heatlatlon!(ax, field.val, k_index; kwargs...)
+
+
+# TODO: Make Makie.convert_arguments work with MultiRegionField and delete heatlatlon!
 
 """
     Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)

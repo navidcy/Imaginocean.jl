@@ -11,33 +11,35 @@
 
 # ### Construct a test-bed field
 
-# Let's plot a field that lives on a latitude-longitude grid.
+# Let's plot a field that lives on a cubed sphere grid.
 
 using Oceananigans
 
-# First create a latitude-longitude grid.
+# First create a conformal cubed sphere grid.
 
-Nx, Ny, Nz = 180, 120, 2
+Nx = 30
+Ny = 30
+Nz = 1
 
-grid = LatitudeLongitudeGrid(size = (Nx, Ny, Nz),
-                             latitude = (-60, 60),
-                             longitude = (-155, 25),
-                             z = (-1, 0),
-                             topology = (Bounded, Bounded, Bounded))
+radius = 1
 
-# Let's create a field. We choose a field that lives on the faces of the cells
-# but any field should do.
+grid = ConformalCubedSphereGrid(; panel_size = (Nx, Ny, Nz),
+                                  z = (-1, 0),
+                                  radius)
+
+# Let's create a field. We choose a field that lives on the center of the cells.
 #
-# We set the field value to ``\sin^2(3λ) \sin(3φ)`` and see how that looks.
+# We set the field values to something and see how that looks.
 
-field = Field{Face, Face, Center}(grid)
+field = CenterField(grid)
 
-set!(field, (λ, φ, z) -> sind(3λ)^2 * sind(3φ))
+set!(field, (λ, φ, z) -> (sind(3λ) + 1/3 * sind(5λ)) * cosd(3φ)^2)
 
 # ### 2D visualization
 
-# We can visualize this field in 2D using a heatmap. Imaginocean.jl adds a method
-# to `heatmap!` so that it works with Oceananigans.jl fields.
+# We can visualize this field in 2D using a heatmap. Imaginocean.jl has a method
+# called `heatlatlon!` which plots a field that lives on a grid whose native
+# coordinates are latitude-longitude.
 
 using CairoMakie, Imaginocean
 
@@ -49,7 +51,7 @@ ax = Axis(fig[1, 1],
           ylabel = "latitude [ᵒ]",
           limits = ((-180, 180), (-90, 90)))
 
-heatmap!(ax, field, 1; kwargs...)
+heatlatlon!(ax, field, 1; kwargs...)
 
 current_figure() #hide
 fig
@@ -64,7 +66,7 @@ ax = GeoAxis(fig[1, 1],
              coastlines = true,
              lonlims = automatic)
 
-heatmap!(ax, field, 1; kwargs...)
+heatlatlon!(ax, field, 1; kwargs...)
 
 current_figure() # hide
 fig

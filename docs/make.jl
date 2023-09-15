@@ -4,7 +4,6 @@ using
   Documenter,
   Literate,
   CairoMakie,  # so that Literate.jl does not capture precompilation output or warnings
-  Glob,
   Imaginocean
 
 CairoMakie.activate!(type = "svg")
@@ -18,6 +17,7 @@ const OUTPUT_DIR   = joinpath(@__DIR__, "src/literated")
 
 to_be_literated = [
     "LatitudeLongitude_grid.jl",
+    "ConformalCubedSphere_grid.jl"
 ]
 
 for file in to_be_literated
@@ -27,6 +27,7 @@ end
 
 example_pages = [
     "Latitude-Longitude grid" => "literated/LatitudeLongitude_grid.md",
+    "Conformal cubed sphere grid" => "literated/ConformalCubedSphere_grid.md",
 ]
 
 #####
@@ -82,8 +83,8 @@ for file in files
     rm(file)
 end
 
-deploydocs(        repo = "github.com/navidcy/Imaginocean.jl.git",
-                versions = ["dev" => "dev", "stable" => "v^", "v#.#.#"],
-              forcepush = true,
-              devbranch = "main",
-            push_preview = true)
+deploydocs(       repo = "github.com/navidcy/Imaginocean.jl.git",
+               versions = ["dev" => "dev", "stable" => "v^", "v#.#.#"],
+             forcepush = true,
+             devbranch = "main",
+           push_preview = true)
