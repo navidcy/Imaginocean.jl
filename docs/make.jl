@@ -4,7 +4,6 @@ using
   Documenter,
   Literate,
   CairoMakie,  # so that Literate.jl does not capture precompilation output or warnings
-  Glob,
   Imaginocean
 
 CairoMakie.activate!(type = "svg")
@@ -84,8 +83,8 @@ for file in files
     rm(file)
 end
 
-deploydocs(        repo = "github.com/navidcy/Imaginocean.jl.git",
-                versions = ["dev" => "dev", "stable" => "v^", "v#.#.#"],
-              forcepush = true,
-              devbranch = "main",
-            push_preview = true)
+deploydocs(       repo = "github.com/navidcy/Imaginocean.jl.git",
+               versions = ["dev" => "dev", "stable" => "v^", "v#.#.#"],
+             forcepush = true,
+             devbranch = "main",
+           push_preview = true)
