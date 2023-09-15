@@ -1,6 +1,6 @@
 module Imaginocean
 
-export heatsphere!
+export heatsphere!, heatlatlon!
 
 using Makie
 using Oceananigans
@@ -9,7 +9,7 @@ using Oceananigans.Grids: λnode, φnode, total_length, topology
 """
     lat_lon_to_cartesian(longitude, latitude; radius=1)
 
-Convert ``(λ, φ) =(```longitude```, ```latitude```)`` coordinates (in degrees) to
+Convert ``(λ, φ) = (```longitude```, ```latitude```)`` coordinates (in degrees) to
 cartesian coordinates ``(x, y, z)`` on a sphere with `radius`, ``R``, i.e.,
 
 ```math
@@ -238,13 +238,16 @@ function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
     return axis
 end
 
+heatsphere!(axis::Axis3, field::CubedSphereField, k_index=1; kwargs...) =
+    apply_regionally!(heatsphere!, axis, field, k_index; kwargs...)
+
+
 #####
 ##### Heat maps on a latitude-longitude grid from (potentially) quasi-unstructured data
 ##### like that associated with CubedSphereField
 #####
 
-function heatlatlon!(ax::Axis, field, k=1; kwargs...)
-
+function heatlatlon!(ax::Axis, field, k_index::Int=1; kwargs...)
     LX, LY, LZ = location(field)
 
     grid = field.grid
@@ -257,24 +260,23 @@ function heatlatlon!(ax::Axis, field, k=1; kwargs...)
 
     mesh!(ax, quad_points, quad_faces; color = colors_per_point, shading = false, kwargs...)
 
-    # TODO: derive default axis limits from the grid
-    # xlims!(ax, (-180, 180))
-    # ylims!(ax, (-90, 90))
-
     return ax
 end
 
-function heatlatlon!(ax::Axis, field::CubedSphereField, k=1; kwargs...)
-    apply_regionally!(heatlatlon!, ax, field, k; kwargs...)
+function heatlatlon!(ax::Axis, field::CubedSphereField, k_index::Int=1; kwargs...)
+    apply_regionally!(heatlatlon!, ax, field, k_index; kwargs...)
 
-    # Lets assume the cubed sphere covers the sphere
     xlims!(ax, (-180, 180))
     ylims!(ax, (-90, 90))
 
     return ax
 end
 
-heatlatlon!(ax::Axis, field::Observable{<:CubedSphereField}, k=1; kwargs...) = heatlatlon!(ax, field.val, k; kwargs...)
+heatlatlon!(ax::Axis, field::Observable{<:CubedSphereField}, k_index::Int=1; kwargs...) =
+    heatlatlon!(ax, field.val, k_index; kwargs...)
+
+
+# TODO: Make Makie.convert_arguments work with MultiRegionField and delete heatlatlon!
 
 """
     Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)
