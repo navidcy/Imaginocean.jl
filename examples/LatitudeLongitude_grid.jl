@@ -23,11 +23,12 @@ grid = LatitudeLongitudeGrid(size = (Nx, Ny, Nz),
                              latitude = (-60, 60),
                              longitude = (-155, 25),
                              z = (-1, 0),
-                             topology = (Periodic, Bounded, Bounded))
-# Let's create a field. We choose here a field that lives on the ``y``-faces of the cells
-# but any field would do.
+                             topology = (Bounded, Bounded, Bounded))
+
+# Let's create a field. We choose a field that lives on the faces of the cells
+# but any field should do.
 #
-# We set the field value to ``\sin(3λ)^2 \sin(3φ)`` and see how that looks.
+# We set the field value to ``\sin^2(3λ) \sin(3φ)`` and see how that looks.
 
 field = Field{Face, Face, Center}(grid)
 
@@ -50,11 +51,11 @@ ax = Axis(fig[1, 1],
 
 heatmap!(ax, field, 1; kwargs...)
 
-current_figure() # hide
+current_figure() #hide
 fig
 
 # We can do the same but with a `GeoAxis` provided by the GeoMakie.jl package
-# that allows us to add coastlines easy or use various projections.
+# that allows us to easily add coastlines or also use various projections.
 
 using GeoMakie
 
@@ -81,5 +82,5 @@ ax = Axis3(fig[1, 1],
 heatsphere!(ax, field; kwargs...)
 hidedecorations!(ax) # hides the axes labels
 
-current_figure() # hide
+current_figure() #hide
 fig

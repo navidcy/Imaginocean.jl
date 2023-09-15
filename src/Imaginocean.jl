@@ -4,7 +4,7 @@ export heatsphere!
 
 using Makie
 using Oceananigans
-using Oceananigans.Grids: xnode, ynode, total_length, topology
+using Oceananigans.Grids: λnode, φnode, total_length, topology
 
 """
     lat_lon_to_cartesian(longitude, latitude; radius=1)
@@ -48,7 +48,7 @@ lat_lon_to_z(longitude, latitude) = sind(latitude)
 """
     longitude_domain(longitude; lower_limit = -180)
 
-Bring `longitude` to domain `[lower_limit, lower_limit+360]` (in degrees).
+Bring `longitude` to domain `[lower_limit, lower_limit + 360]` (in degrees).
 By default, `lower_limit = -180` implying longitude domain ``[-180, 180]``.
 
 Examples
@@ -93,10 +93,10 @@ function get_longitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, Orth
         j₀ = j-1
     end
 
-    λ_vertex₁ = xnode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    λ_vertex₂ = xnode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    λ_vertex₃ = xnode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    λ_vertex₄ = xnode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₁ = λnode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₂ = λnode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₃ = λnode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    λ_vertex₄ = λnode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
 
     return [λ_vertex₁; λ_vertex₂; λ_vertex₃; λ_vertex₄]
 end
@@ -105,8 +105,7 @@ end
     get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
 
 Return the latitudes that correspond to the four vertices of cell `i, j, k` at
-location `(ℓx, ℓy, ℓz)`. The first vertex is the cell's Southern-Western one
-and the rest follow in counter-clockwise order.
+location `(ℓx, ℓy, ℓz)`. The first vertex is the cell's Southern-Western oneλand the rest follow in counter-clockwise order.
 """
 function get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
 
@@ -122,10 +121,10 @@ function get_latitude_vertices(i, j, k, grid::Union{LatitudeLongitudeGrid, Ortho
         j₀ = j-1
     end
 
-    φ_vertex₁ = ynode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    φ_vertex₂ = ynode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    φ_vertex₃ = ynode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
-    φ_vertex₄ = ynode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₁ = φnode( i₀,   j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₂ = φnode(i₀+1,  j₀,  k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₃ = φnode(i₀+1, j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
+    φ_vertex₄ = φnode( i₀,  j₀+1, k, grid, flip_location(ℓx), flip_location(ℓy), ℓz)
 
     return [φ_vertex₁; φ_vertex₂; φ_vertex₃; φ_vertex₄]
 end
@@ -149,18 +148,18 @@ function get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
     φ = zeros(eltype(grid), total_length(ℓx, TX(), grid.Nx, 0), total_length(ℓy, TY(), grid.Ny, 0))
 
     for j in axes(λ, 2), i in axes(λ, 1)
-        λ[i, j] = xnode(i, j, 1, grid, ℓx, ℓy, ℓz)
-        φ[i, j] = ynode(i, j, 1, grid, ℓx, ℓy, ℓz)
+        @inbounds λ[i, j] = λnode(i, j, 1, grid, ℓx, ℓy, ℓz)
+        @inbounds φ[i, j] = φnode(i, j, 1, grid, ℓx, ℓy, ℓz)
     end
 
     λvertices = zeros(4, size(λ)...)
     φvertices = zeros(4, size(φ)...)
 
     for j in axes(λ, 2), i in axes(λ, 1)
-        λvertices[:, i, j] = get_longitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
-        φvertices[:, i, j] =  get_latitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
+        @inbounds λvertices[:, i, j] = get_longitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
+        @inbounds φvertices[:, i, j] =  get_latitude_vertices(i, j, 1, grid, ℓx, ℓy, ℓz)
     end
-    
+
     # ensure λ ∈ [-180, 180]
     @. λ = longitude_domain(λ)
 
@@ -180,7 +179,6 @@ coordinates of the four vertices that determine the cell surrounding each node.
 See [`get_lat_lon_nodes_and_vertices`](@ref).
 """
 function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
-
     (λ, φ), (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
 
     x = similar(λ)
@@ -192,14 +190,14 @@ function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, Ort
     zvertices = similar(λvertices)
 
     for j in axes(λ, 2), i in axes(λ, 1)
-        x[i, j] = lat_lon_to_x(λ[i, j], φ[i, j])
-        y[i, j] = lat_lon_to_y(λ[i, j], φ[i, j])
-        z[i, j] = lat_lon_to_z(λ[i, j], φ[i, j])
+        @inbounds x[i, j] = lat_lon_to_x(λ[i, j], φ[i, j])
+        @inbounds y[i, j] = lat_lon_to_y(λ[i, j], φ[i, j])
+        @inbounds z[i, j] = lat_lon_to_z(λ[i, j], φ[i, j])
 
         for vertex in 1:4
-            xvertices[vertex, i, j] = lat_lon_to_x(λvertices[vertex, i, j], φvertices[vertex, i, j])
-            yvertices[vertex, i, j] = lat_lon_to_y(λvertices[vertex, i, j], φvertices[vertex, i, j])
-            zvertices[vertex, i, j] = lat_lon_to_z(λvertices[vertex, i, j], φvertices[vertex, i, j])
+            @inbounds xvertices[vertex, i, j] = lat_lon_to_x(λvertices[vertex, i, j], φvertices[vertex, i, j])
+            @inbounds yvertices[vertex, i, j] = lat_lon_to_y(λvertices[vertex, i, j], φvertices[vertex, i, j])
+            @inbounds zvertices[vertex, i, j] = lat_lon_to_z(λvertices[vertex, i, j], φvertices[vertex, i, j])
         end
     end
 
@@ -225,7 +223,10 @@ function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
 
     _, (xvertices, yvertices, zvertices) = get_cartesian_nodes_and_vertices(grid, LX(), LY(), LZ())
 
-    quad_points3 = vcat([Point3.(xvertices[:, i, j], yvertices[:, i, j], zvertices[:, i, j]) for i in axes(xvertices, 2), j in axes(xvertices, 3)]...)
+    quad_points3 = @inbounds vcat([Point3.(xvertices[:, i, j],
+                                           yvertices[:, i, j],
+                                           zvertices[:, i, j]) for i in axes(xvertices, 2), j in axes(xvertices, 3)]...)
+
     quad_faces = vcat([begin; j = (i-1) * 4 + 1; [j j+1  j+2; j+2 j+3 j]; end for i in 1:length(quad_points3)÷4]...)
 
     field_2D = interior(field, :, :, k_index)
@@ -249,7 +250,7 @@ function Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int; kwa
 
     _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
 
-    quad_points = vcat([Point2f.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
+    quad_points = @inbounds vcat([Point2f.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
 
     longitudes = unique([quad_points[i][1] for i ∈ eachindex(quad_points)])
     latitudes  = unique([quad_points[i][2] for i ∈ eachindex(quad_points)])

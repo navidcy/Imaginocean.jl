@@ -61,14 +61,29 @@ makedocs(
   checkdocs = :exports
 )
 
-@info "Cleaning up temporary .jld2 and .nc files created by doctests..."
+@info "Clean up temporary .jld2 and .nc output created by doctests or literated examples..."
 
-for file in vcat(glob("docs/*.jld2"), glob("docs/*.nc"))
+"""
+    recursive_find(directory, pattern)
+
+Return list of filepaths within `directory` that contains the `pattern::Regex`.
+"""
+recursive_find(directory, pattern) =
+    mapreduce(vcat, walkdir(directory)) do (root, dirs, files)
+        joinpath.(root, filter(contains(pattern), files))
+    end
+
+files = []
+for pattern in [r"\.jld2", r"\.nc"]
+    global files = vcat(files, recursive_find(@__DIR__, pattern))
+end
+
+for file in files
     rm(file)
 end
 
 deploydocs(        repo = "github.com/navidcy/Imaginocean.jl.git",
-                versions = ["stable" => "v^", "v#.#.#", "dev" => "dev"],
+                versions = ["dev" => "dev", "stable" => "v^", "v#.#.#"],
               forcepush = true,
               devbranch = "main",
             push_preview = true)
