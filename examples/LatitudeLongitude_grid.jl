@@ -50,7 +50,7 @@ ax = Axis(fig[1, 1],
 
 heatmap!(ax, field, 1; kwargs...)
 
-current_figure() # hide
+current_figure() #hide
 fig
 
 # We can do the same but with a `GeoAxis` provided by the GeoMakie.jl package
@@ -81,5 +81,5 @@ ax = Axis3(fig[1, 1],
 heatsphere!(ax, field; kwargs...)
 hidedecorations!(ax) # hides the axes labels
 
-current_figure() # hide
+current_figure() #hide
 fig
