@@ -18,6 +18,7 @@ const OUTPUT_DIR   = joinpath(@__DIR__, "src/literated")
 
 to_be_literated = [
     "LatitudeLongitude_grid.jl",
+    "ConformalCubedSphere_grid.jl"
 ]
 
 for file in to_be_literated
@@ -27,6 +28,7 @@ end
 
 example_pages = [
     "Latitude-Longitude grid" => "literated/LatitudeLongitude_grid.md",
+    "Conformal cubed sphere grid" => "literated/ConformalCubedSphere_grid.md",
 ]
 
 #####
