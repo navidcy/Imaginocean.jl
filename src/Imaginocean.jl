@@ -6,6 +6,8 @@ using Makie
 using Oceananigans
 using Oceananigans.Grids: λnode, φnode, total_length, topology
 
+import Oceananigans.Fields: location
+
 """
     lat_lon_to_cartesian(longitude, latitude; radius=1)
 
@@ -204,6 +206,11 @@ function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, Ort
     return (x, y, z), (xvertices, yvertices, zvertices)
 end
 
+grid(field::Field) = field.grid
+grid(obs::Observable{<:Field}) = obs.val.grid
+
+location(obs::Observable{<:Field}) = location(obs.val)
+
 """
     heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
 
@@ -217,9 +224,9 @@ Arguments
 
 Accepts all keyword arguments for `Makie.mesh!` method.
 """
-function heatsphere!(axis::Axis3, field::Field, k_index=1; kwargs...)
+function heatsphere!(axis::Axis3, field, k_index=1; kwargs...)
     LX, LY, LZ = location(field)
-    grid = field.grid
+    gr = grid(field)
 
     _, (xvertices, yvertices, zvertices) = get_cartesian_nodes_and_vertices(grid, LX(), LY(), LZ())
 
