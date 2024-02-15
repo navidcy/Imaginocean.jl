@@ -181,6 +181,7 @@ coordinates of the four vertices that determine the cell surrounding each node.
 See [`get_lat_lon_nodes_and_vertices`](@ref).
 """
 function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
+    @show typeof(grid)
     (λ, φ), (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
 
     x = similar(λ)
@@ -226,9 +227,9 @@ Accepts all keyword arguments for `Makie.mesh!` method.
 """
 function heatsphere!(axis::Axis3, field, k_index=1; kwargs...)
     LX, LY, LZ = location(field)
-    gr = grid(field)
+    field_grid = grid(field)
 
-    _, (xvertices, yvertices, zvertices) = get_cartesian_nodes_and_vertices(grid, LX(), LY(), LZ())
+    _, (xvertices, yvertices, zvertices) = get_cartesian_nodes_and_vertices(field_grid, LX(), LY(), LZ())
 
     quad_points3 = @inbounds vcat([Point3.(xvertices[:, i, j],
                                            yvertices[:, i, j],
@@ -240,7 +241,7 @@ function heatsphere!(axis::Axis3, field, k_index=1; kwargs...)
 
     colors_per_point = vcat(fill.(vec(field_2D), 4)...)
 
-    mesh!(axis, quad_points3, quad_faces; color = colors_per_point, shading = false, interpolate=false, kwargs...)
+    mesh!(axis, quad_points3, quad_faces; color=colors_per_point, shading=false, interpolate=false, kwargs...)
 
     return axis
 end
