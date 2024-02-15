@@ -5,6 +5,7 @@ export heatsphere!, heatlatlon!
 using Makie
 using Oceananigans
 using Oceananigans.Grids: λnode, φnode, total_length, topology
+using Oceananigans.MultiRegion: number_of_regions
 
 import Oceananigans.Fields: location
 
@@ -181,6 +182,7 @@ coordinates of the four vertices that determine the cell surrounding each node.
 See [`get_lat_lon_nodes_and_vertices`](@ref).
 """
 function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
+
     (λ, φ), (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
 
     x = similar(λ)
@@ -241,14 +243,13 @@ function heatsphere!(axis::Axis3, field, k_index=1; kwargs...)
 
     colors_per_point = vcat(fill.(vec(field_2D), 4)...)
 
-    mesh!(axis, quad_points3, quad_faces; color = colors_per_point, shading = false, interpolate=false, kwargs...)
+    mesh!(axis, quad_points3, quad_faces; color=colors_per_point, shading=false, interpolate=false, kwargs...)
 
     return axis
 end
 
 heatsphere!(axis::Axis3, field::CubedSphereField, k_index=1; kwargs...) =
     apply_regionally!(heatsphere!, axis, field, k_index; kwargs...)
-
 
 #####
 ##### Heat maps on a latitude-longitude grid from (potentially) quasi-unstructured data

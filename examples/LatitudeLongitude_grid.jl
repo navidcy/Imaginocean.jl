@@ -37,7 +37,7 @@ set!(field, (λ, φ, z) -> sind(3λ)^2 * sind(3φ))
 # ### 2D visualization
 
 # We can visualize this field in 2D using a heatmap. Imaginocean.jl adds a method
-# to `heatmap!` so that it works with Oceananigans.jl fields.
+# to `heatmap!` so that it works with Oceananigans' fields.
 
 using CairoMakie, Imaginocean
 
@@ -51,8 +51,7 @@ ax = Axis(fig[1, 1],
 
 heatmap!(ax, field, 1; kwargs...)
 
-current_figure() #hide
-fig
+current_figure()
 
 # We can do the same but with a `GeoAxis` provided by the GeoMakie.jl package
 # that allows us to easily add coastlines or also use various projections.
@@ -66,8 +65,7 @@ ax = GeoAxis(fig[1, 1],
 
 heatmap!(ax, field, 1; kwargs...)
 
-current_figure() # hide
-fig
+current_figure()
 
 # ### 3D visualization on the sphere
 
@@ -82,5 +80,4 @@ ax = Axis3(fig[1, 1],
 heatsphere!(ax, field; kwargs...)
 hidedecorations!(ax) # hides the axes labels
 
-current_figure() #hide
-fig
+current_figure()
