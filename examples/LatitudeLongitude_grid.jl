@@ -37,7 +37,7 @@ set!(field, (λ, φ, z) -> sind(3λ)^2 * sind(3φ))
 # ### 2D visualization
 
 # We can visualize this field in 2D using a heatmap. Imaginocean.jl adds a method
-# to `heatmap!` so that it works with Oceananigans.jl fields.
+# to `heatmap!` so that it works with Oceananigans' fields.
 
 using CairoMakie, Imaginocean
 
