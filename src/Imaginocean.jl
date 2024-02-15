@@ -206,8 +206,8 @@ function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, Ort
     return (x, y, z), (xvertices, yvertices, zvertices)
 end
 
-grid(field::Field) = field.grid
-grid(obs::Observable{<:Field}) = obs.val.grid
+get_grid(field::Field) = field.grid
+get_grid(obs::Observable{<:Field}) = obs.val.grid
 
 location(obs::Observable{<:Field}) = location(obs.val)
 
@@ -226,7 +226,8 @@ Accepts all keyword arguments for `Makie.mesh!` method.
 """
 function heatsphere!(axis::Axis3, field, k_index=1; kwargs...)
     LX, LY, LZ = location(field)
-    gr = grid(field)
+
+    grid = get_grid(field)
 
     _, (xvertices, yvertices, zvertices) = get_cartesian_nodes_and_vertices(grid, LX(), LY(), LZ())
 
@@ -257,7 +258,8 @@ heatsphere!(axis::Axis3, field::CubedSphereField, k_index=1; kwargs...) =
 function heatlatlon!(ax::Axis, field, k_index::Int=1; kwargs...)
     LX, LY, LZ = location(field)
 
-    grid = field.grid
+    grid = get_grid(field)
+
     _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
 
     quad_points = vcat([Point2.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
