@@ -53,8 +53,7 @@ ax = Axis(fig[1, 1],
 
 heatlatlon!(ax, field, 1; kwargs...)
 
-current_figure() #hide
-fig
+current_figure()
 
 # We can do the same but with a `GeoAxis` provided by the GeoMakie.jl package
 # that allows us to easily add coastlines or also use various projections.
@@ -68,8 +67,7 @@ ax = GeoAxis(fig[1, 1],
 
 heatlatlon!(ax, field, 1; kwargs...)
 
-current_figure() # hide
-fig
+current_figure()
 
 # ### 3D visualization on the sphere
 
