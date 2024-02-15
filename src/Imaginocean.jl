@@ -5,6 +5,7 @@ export heatsphere!, heatlatlon!
 using Makie
 using Oceananigans
 using Oceananigans.Grids: λnode, φnode, total_length, topology
+using Oceananigans.MultiRegion: number_of_regions
 
 import Oceananigans.Fields: location
 
@@ -249,7 +250,6 @@ end
 heatsphere!(axis::Axis3, field::CubedSphereField, k_index=1; kwargs...) =
     apply_regionally!(heatsphere!, axis, field, k_index; kwargs...)
 
-
 #####
 ##### Heat maps on a latitude-longitude grid from (potentially) quasi-unstructured data
 ##### like that associated with CubedSphereField
@@ -258,7 +258,7 @@ heatsphere!(axis::Axis3, field::CubedSphereField, k_index=1; kwargs...) =
 function heatlatlon!(ax::Axis, field, k_index::Int=1; kwargs...)
     LX, LY, LZ = location(field)
 
-    grid = field.grid
+    grid = get_grid(field)
     _, (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, LX(), LY(), LZ())
 
     quad_points = vcat([Point2.(λvertices[:, i, j], φvertices[:, i, j]) for i in axes(λvertices, 2), j in axes(λvertices, 3)]...)
