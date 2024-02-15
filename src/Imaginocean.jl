@@ -182,7 +182,7 @@ coordinates of the four vertices that determine the cell surrounding each node.
 See [`get_lat_lon_nodes_and_vertices`](@ref).
 """
 function get_cartesian_nodes_and_vertices(grid::Union{LatitudeLongitudeGrid, OrthogonalSphericalShellGrid}, ℓx, ℓy, ℓz)
-    @show typeof(grid)
+
     (λ, φ), (λvertices, φvertices) = get_lat_lon_nodes_and_vertices(grid, ℓx, ℓy, ℓz)
 
     x = similar(λ)
