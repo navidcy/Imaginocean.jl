@@ -35,9 +35,10 @@ example_pages = [
 #####
 
 format = Documenter.HTML(
-  collapselevel = 2,
-     prettyurls = get(ENV, "CI", nothing) == "true",
-      canonical = "https://navidcy.github.io/Imaginocean.jl/dev/",
+     collapselevel = 2,
+        prettyurls = get(ENV, "CI", nothing) == "true",
+         canonical = "https://navidcy.github.io/Imaginocean.jl/dev/",
+    size_threshold = 2^20,
 )
 
 pages = [
@@ -52,14 +53,14 @@ pages = [
 ]
 
 makedocs(
-   sitename = "Imaginocean.jl",
-    modules = [Imaginocean],
-     format = format,
-      pages = pages,
-    doctest = true,
-     strict = false,
-      clean = true,
-  checkdocs = :exports
+    sitename = "Imaginocean.jl",
+     modules = [Imaginocean],
+      format = format,
+       pages = pages,
+     doctest = true,
+    warnonly = [:footnote, :cross_references, :missing_docs],
+       clean = true,
+   checkdocs = :exports
 )
 
 @info "Clean up temporary .jld2 and .nc output created by doctests or literated examples..."
