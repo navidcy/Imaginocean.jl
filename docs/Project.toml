@@ -8,5 +8,6 @@ Oceananigans = "9e8cae18-63c1-5223-a75c-80ca9d6e9a09"
 
 [compat]
 Documenter = "1"
-GLMakie = "0.8"
-Oceananigans = "0.81 - 0.90"
+GLMakie = "0.8, 0.9, 0.10"
+GeoMakie = "0.5"
+Oceananigans = "0.81 - 0.91"
