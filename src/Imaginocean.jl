@@ -289,7 +289,7 @@ heatlatlon!(ax::Axis, field::Observable{<:CubedSphereField}, k_index::Int=1; kwa
 # TODO: Make Makie.convert_arguments work with MultiRegionField and delete heatlatlon!
 
 """
-    Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)
+    Makie.convert_arguments(P::Type{<:AbstractPlot}, field::Field, k_index::Int)
 
 Convert an Oceananigans.jl `Field` with non-flat horizontal dimensions at vertical
 index `k_index` to arguments that can be plotted as a surface in Makie.jl.
