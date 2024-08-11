@@ -1,5 +1,3 @@
-pushfirst!(LOAD_PATH, joinpath(@__DIR__, "..")) # add Imaginocean to environment stack
-
 using
   Documenter,
   Literate,
