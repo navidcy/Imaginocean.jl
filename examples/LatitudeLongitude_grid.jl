@@ -63,7 +63,7 @@ ax = GeoAxis(fig[1, 1],
              coastlines = true,
              lonlims = automatic)
 
-heatmap!(ax, field, 1; kwargs...)
+heatlatlon!(ax, field, 1; kwargs...)
 
 current_figure()
 
