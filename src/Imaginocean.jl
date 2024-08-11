@@ -292,9 +292,9 @@ heatlatlon!(ax::Axis, field::Observable{<:CubedSphereField}, k_index::Int=1; kwa
     Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int)
 
 Convert an Oceananigans.jl `Field` with non-flat horizontal dimensions at vertical
-index `k_index` to arguments that can be plotted as a `SurfaceLike` type in Makie.jl.
+index `k_index` to arguments that can be plotted as a surface in Makie.jl.
 """
-function Makie.convert_arguments(P::SurfaceLike, field::Field, k_index::Int; kwargs...)
+function Makie.convert_arguments(P::Type{<:AbstractPlot}, field::Field, k_index::Int; kwargs...)
     LX, LY, LZ = location(field)
     grid = field.grid
 
