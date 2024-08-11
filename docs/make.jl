@@ -1,12 +1,8 @@
-pushfirst!(LOAD_PATH, joinpath(@__DIR__, "..")) # add Imaginocean to environment stack
-
 using
   Documenter,
   Literate,
-  CairoMakie,  # so that Literate.jl does not capture precompilation output or warnings
+  GLMakie,  # so that Literate.jl does not capture precompilation output or warnings
   Imaginocean
-
-CairoMakie.activate!(type = "svg")
 
 #####
 ##### Generate examples

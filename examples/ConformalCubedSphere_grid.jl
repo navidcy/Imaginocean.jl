@@ -6,7 +6,7 @@
 
 # ```julia
 # using Pkg
-# pkg"add Oceananigans, CairoMakie, Imaginocean, GeoMakie"
+# pkg"add Oceananigans, GLMakie, Imaginocean, GeoMakie"
 # ```
 
 # ### Construct a test-bed field
@@ -41,7 +41,7 @@ set!(field, (λ, φ, z) -> (sind(3λ) + 1/3 * sind(5λ)) * cosd(3φ)^2)
 # called `heatlatlon!` that plots a field that lives on a grid whose native
 # coordinates are latitude and longitude.
 
-using CairoMakie, Imaginocean
+using GLMakie, Imaginocean
 
 kwargs = (colorrange = (-1, 1), colormap = :balance)
 

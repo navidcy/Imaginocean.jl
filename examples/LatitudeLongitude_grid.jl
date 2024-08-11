@@ -6,7 +6,7 @@
 
 # ```julia
 # using Pkg
-# pkg"add Oceananigans, CairoMakie, Imaginocean, GeoMakie"
+# pkg"add Oceananigans, GLMakie, Imaginocean, GeoMakie"
 # ```
 
 # ### Construct a test-bed field
@@ -39,7 +39,7 @@ set!(field, (λ, φ, z) -> sind(3λ)^2 * sind(3φ))
 # We can visualize this field in 2D using a heatmap. Imaginocean.jl adds a method
 # to `heatmap!` so that it works with Oceananigans' fields.
 
-using CairoMakie, Imaginocean
+using GLMakie, Imaginocean
 
 kwargs = (colorrange = (-1, 1), colormap = :balance)
 
